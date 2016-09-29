@@ -64,7 +64,7 @@ class BLEAppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func applicationWillTerminate(application: UIApplication) {
-        println("application will terminate")
+        print("application will terminate")
     }
     
 //    

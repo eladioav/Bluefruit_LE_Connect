@@ -93,7 +93,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         
         super.init(coder: aDecoder)
         
@@ -107,7 +107,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             delegate = newDelegate as? BLEMainViewControllerDelegate
         }
         else {
-            printLog(self, "setDelegate", "failed to set delegate")
+            printLog(self, funcName: "setDelegate", logString: "failed to set delegate")
         }
         
     }
@@ -385,13 +385,13 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             return
         }
         
-        printLog(self, "connectPeripheral", "")
+        printLog(self, funcName: "connectPeripheral", logString: "")
         
         connectionTimer?.invalidate()
         
         if cm == nil {
 //            println(self.description)
-            printLog(self, (__FUNCTION__), "No central Manager found, unable to connect peripheral")
+            printLog(self, funcName: (__FUNCTION__), logString: "No central Manager found, unable to connect peripheral")
             return
         }
         
@@ -428,11 +428,11 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
 //        connect device w services: dfuServiceUUID, deviceInfoServiceUUID
         
-        printLog(self, (__FUNCTION__), self.description)
+        printLog(self, funcName: (__FUNCTION__), logString: self.description)
         
         if cm == nil {
             //            println(self.description)
-            printLog(self, (__FUNCTION__), "No central Manager found, unable to connect peripheral")
+            printLog(self, funcName: (__FUNCTION__), logString: "No central Manager found, unable to connect peripheral")
             return
         }
         
@@ -477,7 +477,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         //Notify user that connection timed out
         let alert = UIAlertController(title: "Connection timed out", message: "No response from peripheral", preferredStyle: UIAlertControllerStyle.Alert)
-        let aaOk = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (aa:UIAlertAction!) -> Void in }
+        let aaOk = UIAlertAction(title: "OK", style: UIAlertActionStyle.Cancel) { (aa:UIAlertAction) -> Void in }
         alert.addAction(aaOk)
         self.presentViewController(alert, animated: true) { () -> Void in }
         
@@ -499,7 +499,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     
     func disconnect() {
         
-        printLog(self, (__FUNCTION__), "")
+        printLog(self, funcName: (__FUNCTION__), logString: "")
         
         if connectionMode == ConnectionMode.DFU && dfuPeripheral != nil{
             cm!.cancelPeripheralConnection(dfuPeripheral)
@@ -508,12 +508,12 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         }
         
         if cm == nil {
-            printLog(self, (__FUNCTION__), "No central Manager found, unable to disconnect peripheral")
+            printLog(self, funcName: (__FUNCTION__), logString: "No central Manager found, unable to disconnect peripheral")
             return
         }
             
         else if currentPeripheral == nil {
-            printLog(self, (__FUNCTION__), "No current peripheral found, unable to disconnect peripheral")
+            printLog(self, funcName: (__FUNCTION__), logString: "No current peripheral found, unable to disconnect peripheral")
             return
         }
         
@@ -538,7 +538,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         else if (connectionStatus == ConnectionStatus.Scanning){
             
             if cm == nil {
-                printLog(self, "alertView clickedButtonAtIndex", "No central Manager found, unable to stop scan")
+                printLog(self, funcName: "alertView clickedButtonAtIndex", logString: "No central Manager found, unable to stop scan")
                 return
             }
             
@@ -645,7 +645,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     
     //MARK: CBCentralManagerDelegate methods
     
-    func centralManagerDidUpdateState(central: CBCentralManager!) {
+    func centralManagerDidUpdateState(central: CBCentralManager) {
         
         if (central.state == CBCentralManagerState.PoweredOn){
             
@@ -660,7 +660,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    func centralManager(central: CBCentralManager!, didDiscoverPeripheral peripheral: CBPeripheral!, advertisementData: [NSObject : AnyObject]!, RSSI: NSNumber!) {
+    func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
 
         if connectionMode == ConnectionMode.None {
             dispatch_sync(dispatch_get_main_queue(), { () -> Void in
@@ -680,7 +680,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    func centralManager(central: CBCentralManager!, didConnectPeripheral peripheral: CBPeripheral!) {
+    func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
         
         if (delegate != nil) {
             delegate!.onDeviceConnectionChange(peripheral)
@@ -692,18 +692,18 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         }
         
         if currentPeripheral == nil {
-            printLog(self, "didConnectPeripheral", "No current peripheral found, unable to connect")
+            printLog(self, funcName: "didConnectPeripheral", logString: "No current peripheral found, unable to connect")
             return
         }
         
         
         if currentPeripheral!.currentPeripheral == peripheral {
             
-            printLog(self, "didConnectPeripheral", "\(peripheral.name)")
+            printLog(self, funcName: "didConnectPeripheral", logString: "\(peripheral.name)")
             
             //Discover Services for device
             if((peripheral.services) != nil){
-                printLog(self, "didConnectPeripheral", "Did connect to existing peripheral \(peripheral.name)")
+                printLog(self, funcName: "didConnectPeripheral", logString: "Did connect to existing peripheral \(peripheral.name)")
                 currentPeripheral!.peripheral(peripheral, didDiscoverServices: nil)  //already discovered services, DO NOT re-discover. Just pass along the peripheral.
             }
             else {
@@ -714,7 +714,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    func centralManager(central: CBCentralManager!, didDisconnectPeripheral peripheral: CBPeripheral!, error: NSError!) {
+    func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         
         //respond to disconnection
         
@@ -727,10 +727,10 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             return
         }
         
-        printLog(self, "didDisconnectPeripheral", "")
+        printLog(self, funcName: "didDisconnectPeripheral", logString: "")
         
         if currentPeripheral == nil {
-            printLog(self, "didDisconnectPeripheral", "No current peripheral found, unable to disconnect")
+            printLog(self, funcName: "didDisconnectPeripheral", logString: "No current peripheral found, unable to disconnect")
             return
         }
         
@@ -743,7 +743,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         let topVC = navController.topViewController
         if  connectionStatus == ConnectionStatus.Connected && isModuleController(topVC) {
                 
-                printLog(self, "centralManager:didDisconnectPeripheral", "unexpected disconnect while connected")
+                printLog(self, funcName: "centralManager:didDisconnectPeripheral", logString: "unexpected disconnect while connected")
                 
                 //return to main view
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -764,7 +764,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             
             abortConnection()
             
-            printLog(self, "centralManager:didDisconnectPeripheral", "unexpected disconnect while connecting")
+            printLog(self, funcName: "centralManager:didDisconnectPeripheral", logString: "unexpected disconnect while connecting")
             
             //return to main view
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -791,7 +791,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     }
     
     
-    func centralManager(central: CBCentralManager!, didFailToConnectPeripheral peripheral: CBPeripheral!, error: NSError!) {
+    func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
         
         if (delegate != nil) {
             delegate!.onDeviceConnectionChange(peripheral)
@@ -840,12 +840,12 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         //Bail if we aren't in the process of connecting
         if connectionStatus != ConnectionStatus.Connecting {
-            printLog(self, "connectionFinalized", "with incorrect state")
+            printLog(self, funcName: "connectionFinalized", logString: "with incorrect state")
             return
         }
         
         if (currentPeripheral == nil) {
-            printLog(self, "connectionFinalized", "Unable to start info w nil currentPeripheral")
+            printLog(self, funcName: "connectionFinalized", logString: "Unable to start info w nil currentPeripheral")
             return
         }
         
@@ -875,9 +875,9 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             controllerViewController = ControllerViewController(aDelegate: self)
             vc = controllerViewController
         case ConnectionMode.DFU:
-            printLog(self, (__FUNCTION__), "DFU mode")
+            printLog(self, funcName: (__FUNCTION__), logString: "DFU mode")
         default:
-            printLog(self, (__FUNCTION__), "No connection mode set")
+            printLog(self, funcName: (__FUNCTION__), logString: "No connection mode set")
             break
         }
         
@@ -893,7 +893,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
     
     func launchDFU(peripheral:CBPeripheral){
         
-        printLog(self, (__FUNCTION__), self.description)
+        printLog(self, funcName: (__FUNCTION__), logString: self.description)
         
         connectionMode = ConnectionMode.DFU
         dfuViewController = DFUViewController()
@@ -928,7 +928,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         //Data incoming from UART peripheral, forward to current view controller
         
-        printLog(self, "didReceiveData", "\(newData.stringRepresentation())")
+        printLog(self, funcName: "didReceiveData", logString: "\(newData.stringRepresentation())")
         
         if (connectionStatus == ConnectionStatus.Connected ) {
             //UART
@@ -944,7 +944,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
             }
         }
         else {
-            printLog(self, "didReceiveData", "Received data without connection")
+            printLog(self, funcName: "didReceiveData", logString: "Received data without connection")
         }
         
     }
@@ -954,7 +954,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         //respond to device disconnecting
         
-        printLog(self, "peripheralDidDisconnect", "")
+        printLog(self, funcName: "peripheralDidDisconnect", logString: "")
         
         //if we were in the process of scanning/connecting, dismiss alert
         if (currentAlertView != nil) {
@@ -965,7 +965,7 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         let topVC = navController.topViewController
         if  connectionStatus == ConnectionStatus.Connected && isModuleController(topVC) {
                 
-                printLog(self, "peripheralDidDisconnect", "unexpected disconnect while connected")
+                printLog(self, funcName: "peripheralDidDisconnect", logString: "unexpected disconnect while connected")
                 
                     //return to main view
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -1022,11 +1022,11 @@ class BLEMainViewController : UIViewController, UINavigationControllerDelegate, 
         
         let hexString = newData.hexRepresentationWithSpaces(true)
         
-        printLog(self, "sendData", "\(hexString)")
+        printLog(self, funcName: "sendData", logString: "\(hexString)")
         
         
         if currentPeripheral == nil {
-            printLog(self, "sendData", "No current peripheral found, unable to send data")
+            printLog(self, funcName: "sendData", logString: "No current peripheral found, unable to send data")
             return
         }
         

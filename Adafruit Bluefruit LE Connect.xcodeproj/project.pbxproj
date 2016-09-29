@@ -540,14 +540,18 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = BLE;
+				LastSwiftMigration = 0720;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Adafruit Industries";
 				TargetAttributes = {
 					F0A2C96516BBE44500F2FD12 = {
-						DevelopmentTeam = 2X94RM7457;
 						SystemCapabilities = {
-							com.apple.iCloud = {
+							com.apple.BackgroundModes = {
 								enabled = 1;
+							};
+							com.apple.iCloud = {
+								enabled = 0;
 							};
 						};
 					};
@@ -795,16 +799,15 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-1";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Adafruit Bluefruit LE Connect/BluetoothLE Test.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eladio Alvarez Valle (GM4QN2YZ3T)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BLE Test/BluetoothLE Test-Prefix.pch";
 				INFOPLIST_FILE = "BLE Test/BluetoothLE Test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "BluetoothLE Test";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "fd8297b4-0599-4e0a-bd36-403f4de03dbe";
 				SWIFT_OBJC_BRIDGING_HEADER = "BLE Test/BluetoothLE Test-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = app;
@@ -817,16 +820,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-1";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = "Adafruit Bluefruit LE Connect/BluetoothLE Test.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Eladio Alvarez Valle (GM4QN2YZ3T)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BLE Test/BluetoothLE Test-Prefix.pch";
 				INFOPLIST_FILE = "BLE Test/BluetoothLE Test-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "BluetoothLE Test";
-				PROVISIONING_PROFILE = "2f993dd5-5f8c-4144-9ab0-c1865cda0990";
+				PROVISIONING_PROFILE = "fd8297b4-0599-4e0a-bd36-403f4de03dbe";
 				SWIFT_OBJC_BRIDGING_HEADER = "BLE Test/BluetoothLE Test-Bridging-Header.h";
 				WRAPPER_EXTENSION = app;
 			};

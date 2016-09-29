@@ -155,7 +155,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
             
             //Warn the user that GPS isn't available
             locationAlert = UIAlertController(title: "Location Services disabled", message: "Enable Location Services in \nSettings->Privacy to allow location data to be sent over Bluetooth", preferredStyle: UIAlertControllerStyle.Alert)
-            let aaOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (aa:UIAlertAction!) -> Void in
+            let aaOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (aa:UIAlertAction) -> Void in
                 
             })
             locationAlert!.addAction(aaOK)
@@ -191,7 +191,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
         
         //Warn the user that GPS isn't available
         locationAlert = UIAlertController(title: "Location Services disabled", message: "Enable Location Services in \nSettings->Privacy to allow location data to be sent over Bluetooth", preferredStyle: UIAlertControllerStyle.Alert)
-        let aaOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (aa:UIAlertAction!) -> Void in
+        let aaOK = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (aa:UIAlertAction) -> Void in
             
         })
         locationAlert!.addAction(aaOK)
@@ -313,7 +313,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
                     
                 }
                 else {
-                    printLog(self, "buttonValueChanged", "accelerometer unavailable")
+                    printLog(self, funcName: "buttonValueChanged", logString: "accelerometer unavailable")
                 }
             }
                 //button switched off
@@ -355,7 +355,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
                     controlTable.endUpdates()
                 }
                 else {
-                    printLog(self, "buttonValueChanged", "gyro unavailable")
+                    printLog(self, funcName: "buttonValueChanged", logString: "gyro unavailable")
                 }
                 
             }
@@ -394,7 +394,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
                     controlTable.endUpdates()
                 }
                 else {
-                    printLog(self, "buttonValueChanged", "magnetometer unavailable")
+                    printLog(self, funcName: "buttonValueChanged", logString: "magnetometer unavailable")
                 }
             }
                 //button switched off
@@ -438,7 +438,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
                         }
                     }
                     else {
-                        printLog(self, "buttonValueChanged", "Location Manager authorization not found")
+                        printLog(self, funcName: "buttonValueChanged", logString: "Location Manager authorization not found")
                         gpsButton.selected = false
                         removeGPSTimer()
                         locationManager = nil
@@ -506,7 +506,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
                     controlTable.endUpdates()
                 }
                 else {
-                    printLog(self, "buttonValueChanged", "device motion unavailable")
+                    printLog(self, funcName: "buttonValueChanged", logString: "device motion unavailable")
                 }
             }
                 //button switched off
@@ -607,7 +607,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     
-    func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         let loc = locations.last as! CLLocation
         
@@ -639,9 +639,9 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     
     func storeSensorData(type:SensorType, x:Double, y:Double, z:Double, w:Double?) {    //called in sensor queue
         
-        var idx = type.rawValue
+        let idx = type.rawValue
         
-        var data = NSMutableData(capacity: 0)!
+        let data = NSMutableData(capacity: 0)!
         let pfx = NSString(string: sensorArray[idx].prefix)
         var xv = Float(x)
         var yv = Float(y)
@@ -670,7 +670,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     
     func sendSensorData(timer:NSTimer) {
         
-        var startIdx = sendSensorIndex
+        let startIdx = sendSensorIndex
         var foundIdx:Int
         
         var data:NSData?
@@ -824,7 +824,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if section < sensorArray.count {
-            var snsr = sensorArray[section]
+            let snsr = sensorArray[section]
             if snsr.toggleButton.selected == true {
                 return snsr.valueCells.count+1
             }
@@ -938,7 +938,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
         
         sender.backgroundColor = cellSelectionColor
         
-        var str = NSString(string: buttonPrefix + "\(sender.tag)" + "1")
+        let str = NSString(string: buttonPrefix + "\(sender.tag)" + "1")
         let data = NSData(bytes: str.UTF8String, length: str.length)
         
         delegate?.sendData(appendCRC(data))
@@ -952,7 +952,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
         
         sender.backgroundColor = buttonColor
         
-        var str = NSString(string: buttonPrefix + "\(sender.tag)" + "0")
+        let str = NSString(string: buttonPrefix + "\(sender.tag)" + "0")
         let data = NSData(bytes: str.UTF8String, length: str.length)
         
         delegate?.sendData(appendCRC(data))
@@ -986,7 +986,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     func appendCRCmutable(data:NSMutableData) {
         
         //append crc
-        var len = data.length
+        let len = data.length
         var bdata = [UInt8](count: len, repeatedValue: 0)
         var buf = [UInt8](count: len, repeatedValue: 0)
         var crc:UInt8 = 0
@@ -1007,7 +1007,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
     
     func appendCRC(data:NSData)->NSMutableData {
         
-        var mData = NSMutableData(length: 0)
+        let mData = NSMutableData(length: 0)
         mData!.appendData(data)
         appendCRCmutable(mData!)
         return mData!
@@ -1023,7 +1023,7 @@ class ControllerViewController: UIViewController, UITableViewDataSource, UITable
         var rv = red
         var gv = green
         var bv = blue
-        var data = NSMutableData(capacity: 3 + pfx.length)!
+        let data = NSMutableData(capacity: 3 + pfx.length)!
         
         data.appendBytes(pfx.UTF8String, length: pfx.length)
         data.appendBytes(&rv, length: 1)
